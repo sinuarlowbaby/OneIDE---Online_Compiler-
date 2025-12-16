@@ -1,0 +1,215 @@
+{% extends 'user/user_home.html' %}
+{% block body %}
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 600;
+        color: #333;
+    }
+    .search-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+    .form-control {
+        border-radius: 10px;
+        padding: 14px;
+        border: 1px solid #ccc;
+        margin-right: 10px;
+        width: 350px;
+        background-color: #f7f7f7;
+        color: #333;
+        transition: all 0.3s ease-in-out;
+    }
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+    }
+    .btn-search {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 12px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .btn-search:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 30px;
+        justify-content: center;
+    }
+    .card-item {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        width: 300px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .card-item:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    .card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .card-text {
+        font-size: 0.875rem;
+        color: #555;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .btn-view {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-view:hover {
+        background: linear-gradient(to right, #5a0ebc, #1b5ce0);
+        transform: scale(1.05);
+    }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+    }
+    .pagination a {
+        margin: 0 5px;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        color: #333;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .pagination a.active {
+        background-color: #007bff;
+        color: white;
+    }
+    .pagination a:hover {
+        background-color: #ddd;
+        color: #007bff;
+    }
+    @media (max-width: 768px) {
+        .form-control {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .card-item {
+            width: 100%;
+            max-width: 350px;
+        }
+    }
+.user-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+</style>
+<body>
+
+    <div class="container">
+        <h2 class="text-center mb-4">Chat</h2>
+
+        <!-- Search Form -->
+        <form action="/sharetofriendsearch" method="post" class="search-container">
+            {% csrf_token %}
+            <input type="text" class="form-control" placeholder="Search by username" name="name">
+            <button type="submit" class="btn-search">Search</button>
+        </form>
+
+        <!-- Card Layout for User Codes -->
+<div class="card-container" id="cardContainer">
+    {% for i in val %}
+        {% if  i.other_user.LOGIN.id != current_user_id %}
+
+
+<div class="card-item">
+    <p class="card-text">
+        <img src="{{ i.other_user.photo.url }}" alt="{{ i.other_user.LOGIN.username }}" class="user-photo" />
+        {{ i.other_user.LOGIN.username }}
+
+        <!-- Show Red Dot if there are unread messages -->
+        {% if i.has_unread %}
+        <span class="notification-dot"></span>
+        {% endif %}
+    </p>
+
+    <!-- Button to view chat -->
+    <button class="btn-view" onclick="markAsRead('{{ i.chat_id }}'); window.location.href='{% url 'user_chats' i.chat_id %}'">
+        View
+    </button>
+</div>
+        {% endif %}
+{% endfor %}
+
+<!-- CSS for Red Dot -->
+<style>
+    .notification-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-color: red;
+        border-radius: 50%;
+        margin-left: 5px;
+    }
+</style>
+
+<!-- JavaScript to Mark Messages as Read -->
+<script>
+    function markAsRead(chatId) {
+        fetch(`/mark_as_read/${chatId}/`, { method: 'POST', headers: { 'X-CSRFToken': '{{ csrf_token }}' } })
+        .then(response => console.log("Marked as read"));
+    }
+</script>
+
+</div>
+
+
+
+
+
+        <!-- Pagination controls -->
+        <div class="pagination">
+            {% for page_num in page_range %}
+            <a href="?page={{ page_num }}" class="{% if page_num == current_page %}active{% endif %}">{{ page_num }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+{% endblock %}

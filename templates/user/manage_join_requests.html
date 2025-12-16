@@ -1,0 +1,135 @@
+{% extends 'user/user_home.html' %}
+{% block body %}
+
+<head>
+    <title>Manage Join Requests</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Unique styles for join request page */
+        .join-requests-container {
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        .join-requests-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .join-request-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .join-request-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .request-group-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .request-user-name {
+            font-size: 16px;
+            color: #6c757d;
+        }
+
+        .request-status {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .status-accepted {
+            background: #28a745;
+            color: #fff;
+        }
+
+        .status-rejected {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .join-request-buttons {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .accept-btn {
+            background: #28a745;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        .reject-btn {
+            background: #dc3545;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .accept-btn:hover {
+            background: #218838;
+        }
+
+        .reject-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+   <div class="join-requests-container">
+    <h2 class="join-requests-title">Manage Join Requests</h2>
+
+    {% if join_requests %}
+        {% for request in join_requests %}
+            <div class="join-request-card">
+                <h5 class="request-group-name"> Group : {{ request.GROUP.grpName }}</h5>
+                <p class="request-user-name">Description : <strong>{{ request.GROUP.Detail }}</strong></p>
+                <p class="request-user-name">Requested by: <strong>{{ request.USER.name }}</strong></p>
+                <p>
+                    <span class="request-status
+                        {% if request.status == 'Pending' %}status-pending
+                        {% elif request.status == 'Accepted' %}status-accepted
+                        {% else %}status-rejected{% endif %}">
+                        {{ request.status }}
+                    </span>
+                    <a href="{% url 'selfprofileview' request.USER.id %}" class="btn btn-primary btn-sm">View</a>
+                </p>
+                <div class="join-request-buttons">
+                    <a href="{% url 'approve_join_request' request.id %}" class="accept-btn">Accept</a>
+                    <a href="{% url 'reject_join_request' request.id %}" class="reject-btn">Reject</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-center text-muted">No pending join requests.</p>
+    {% endif %}
+</div>
+
+</body>
+
+{% endblock %}

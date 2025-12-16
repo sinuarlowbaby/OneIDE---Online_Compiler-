@@ -1,0 +1,204 @@
+{% extends 'user/user_home.html' %}
+{% block body %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <style>
+        /* General Styling */
+        .custom-chat-body {
+            background: linear-gradient(to right, #f0f4f8, #d9e2ec);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        /* Chat Container */
+        .custom-chat-container {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+
+        /* Chat Header */
+       /* Chat Header Styling */
+.custom-chat-header {
+    background: #3a3f51;
+    padding: 15px;
+    color: white;
+    font-size: 22px;
+    font-weight: 600;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Chat Profile Link */
+.chat-profile-link {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+
+.chat-profile-link:hover {
+    color: #ffca28;
+}
+
+/* Profile Picture */
+.chat-profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
+
+
+        /* Chat Box */
+        .custom-chat-box {
+            display: flex;
+            flex-direction: column; /* Messages appear in correct order */
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Chat Message */
+        .custom-chat-message {
+            padding: 12px 18px;
+            border-radius: 18px;
+            max-width: 60%;
+            font-size: 16px;
+            word-wrap: break-word;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        /* Sent & Received Messages */
+        .custom-chat-sent {
+            align-self: flex-end;
+            background: #daf0ff;
+            border-top-right-radius: 5px;
+            text-align: right; /* Align text to the right */
+        }
+
+        .custom-chat-received {
+            align-self: flex-start;
+            background: #f1f3f5;
+            border-top-left-radius: 5px;
+            text-align: left; /* Align text to the left */
+        }
+
+        /* Input Form */
+        .custom-chat-input {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .custom-chat-input input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .custom-chat-input button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .custom-chat-input button:hover {
+            background: #e63946;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Fix */
+        @media (max-width: 768px) {
+            .custom-chat-container {
+                max-width: 90%;
+            }
+            .custom-chat-message {
+                max-width: 80%;
+            }
+        }
+    </style>
+</head>
+
+<div class="custom-chat-container">
+<div class="custom-chat-header">
+    <a href="{% url 'selfprofileview' receiver.LOGIN.id %}" class="chat-profile-link">
+        <img src="{{ receiver.photo.url }}" alt="{{ clicked_user.name }}" class="chat-profile-pic">
+            {{ receiver.name }}
+    </a>
+</div>
+
+    <!-- Input Form -->
+    <form method="POST" action="/chat_send_message/" class="custom-chat-input">
+        {% csrf_token %}
+        <input type="hidden" name="receiver_id" value="{{ receiver.LOGIN.id }}">
+        <input type="text" name="message" placeholder="Type a message..." required>
+        <button type="submit">Send</button>
+    </form>
+
+    <!-- Chat Messages -->
+    <!-- Chat Messages -->
+<div id="chat-box" class="custom-chat-box">
+    {% if messages %}
+        {% for msg in messages %}
+            {% if msg.FROM_USER.LOGIN.id == current_user_id %}
+                <!-- Sent Message (aligned right) -->
+                <div class="custom-chat-message custom-chat-sent" style="align-self: flex-end;">
+                    <p><strong>You:</strong> {{ msg.message }}</p>
+                <small>{{ msg.date }}</small>
+                </div>
+            {% else %}
+                <!-- Received Message (aligned left) -->
+                <div class="custom-chat-message custom-chat-received" style="align-self: flex-start;">
+                    <p><strong>{{ msg.FROM_USER.LOGIN.username }}:</strong> {{ msg.message }}</p>
+                <small>{{ msg.date }}</small>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p style="text-align:center; color:gray;">No messages yet.</p>
+    {% endif %}
+</div>
+
+</div>
+
+<!-- Auto-scroll to the latest message -->
+<script>
+    window.onload = function() {
+        var chatBox = document.getElementById("chat-box");
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+</script>
+
+{% endblock %}

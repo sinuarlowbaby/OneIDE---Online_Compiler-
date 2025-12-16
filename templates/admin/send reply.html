@@ -1,0 +1,92 @@
+{% extends 'admin/admin home.html' %}
+
+{% block body %}
+<style>
+    body {
+        background-color: #eef2f8;
+    }
+
+    .unique-reply-container {
+        margin-top: 60px;
+        max-width: 800px; /* Increased width for desktop */
+        background: #ffffff;
+        padding: 50px; /* Increased padding */
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .unique-reply-header {
+        font-size: 2rem; /* Increased font size for header */
+        font-weight: bold;
+        text-align: center;
+        color: #333333;
+        margin-bottom: 20px;
+    }
+
+    .unique-reply-textarea {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        font-size: 1rem;
+        padding: 20px; /* Increased padding */
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        min-height: 300px; /* Increased minimum height */
+    }
+
+    .unique-reply-textarea:focus {
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .unique-reply-button {
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 15px 20px; /* Increased padding */
+        font-size: 1.2rem; /* Increased font size */
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        width: 100%;
+    }
+
+    .unique-reply-button:hover {
+        background-color: #0056b3;
+        transform: scale(1.03);
+    }
+
+    .unique-reply-button:active {
+        background-color: #004085;
+    }
+
+    .unique-reply-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+</style>
+
+<body>
+    <div class="unique-reply-container">
+        <h2 class="unique-reply-header">Send Reply to Complaint</h2>
+        <form method="post" action="/replycomplaintdb" class="unique-reply-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="unique-reply-textarea">Reply</label>
+                <textarea id="unique-reply-textarea" name="reply" class="unique-reply-textarea form-control" rows="10" placeholder="Write your reply here..."></textarea>
+            </div>
+            <div class="text-center">
+                <input type="submit" value="Send Reply" class="unique-reply-button">
+            </div>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+{% endblock %}

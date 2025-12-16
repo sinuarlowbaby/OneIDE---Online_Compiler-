@@ -1,0 +1,117 @@
+{% extends 'user/user_home.html' %}
+{% block body %}
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .super-unique-body {
+            background-color: #f0f4ff;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .super-unique-container {
+            margin: 30px auto;
+            padding: 30px;
+            max-width: 400px; /* Limit width for simplicity */
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center; /* Center all text */
+            animation: fadeIn 0.7s ease-in-out;
+        }
+
+        .super-unique-heading {
+            margin-bottom: 20px;
+            font-size: 24px; /* Adjust font size */
+            font-weight: bold;
+            color: #333;
+        }
+
+        .super-unique-user-info img {
+            border-radius: 50%;
+            margin-bottom: 15px;
+            width: 100px; /* Set a fixed size for the image */
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .super-unique-user-info h5, .super-unique-user-info p {
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .super-unique-btn-custom {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px; /* Add margin for spacing */
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #1e8449;
+            transform: scale(1.05);
+        }
+
+        .btn-info {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+    </style>
+
+<body class="super-unique-body">
+    <div class="super-unique-container">
+        <h2 class="super-unique-heading">User Details</h2>
+        <div class="super-unique-user-info">
+            <img src="../media/{{ val.photo }}" alt="User Photo">
+            <h5> Username: {{ val.LOGIN.username }}</h5>
+            <h5>Name: {{ val.name }}</h5>
+            <p>Age: {{ val.age }}</p>
+            <p>Gender: {{ val.gender }}</p>
+            <p>Email: {{ val.email }}</p>
+        </div>
+
+{#        {% if val.LOGIN.type == 'user' %}#}
+{#            <a href="/block_user/{{ val.LOGIN.id }}" class="super-unique-btn-custom btn btn-danger">Block User</a>#}
+{#        {% elif val.LOGIN.type != 'admingrp' %}#}
+{#            <a href="/unblock_user/{{ val.LOGIN.id }}" class="super-unique-btn-custom btn btn-success">Unblock User</a>#}
+{#        {% endif %}#}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+{% endblock %}

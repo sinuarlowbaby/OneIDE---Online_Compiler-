@@ -1,0 +1,263 @@
+{% extends 'user/user_home.html' %}
+{% block body %}
+    <style>
+        /* General body styling */
+        body {
+            background-color: #f7f9fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Topbar Styling */
+        .topbar {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e0e0e0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .topbar .group-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .topbar img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+
+        .topbar h3 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .topbar p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #757575;
+        }
+
+        .topbar .actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .topbar a {
+            padding: 12px 25px;
+            background-color: #008CBA;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .topbar a:hover {
+            background-color: #005f73;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Card Styling for group code sharing */
+        .card {
+            margin: 20px 0;
+            background-color: #F5F5F5; /* Light Gray */
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card2 {
+            margin: 20px 0;
+            background-color: #E3F2FD; /* Soft Blue */
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .card-text {
+            font-size: 16px;
+            color: #757575;
+            margin-bottom: 20px;
+        }
+
+        .btn-view {
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 25px;
+            font-size: 14px;
+            padding: 10px 25px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-view:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background-color: #F44336;
+            color: white;
+            border-radius: 25px;
+            font-size: 14px;
+            padding: 10px 25px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background-color: #e53935;
+            transform: translateY(-2px);
+        }
+
+        .btn-edit {
+            background-color: #FF9800;
+            color: white;
+            border-radius: 25px;
+            font-size: 14px;
+            padding: 10px 25px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-edit:hover {
+            background-color: #FB8C00;
+            transform: translateY(-2px);
+        }
+
+        /* Layout adjustments for large screens */
+        @media (min-width: 992px) {
+            .row {
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+            }
+
+            .col-md-4, .col-md-8 {
+                width: 100%;
+            }
+        }
+
+        /* Layout adjustments for small screens (Mobile) */
+        @media (max-width: 768px) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .topbar .actions {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 15px;
+            }
+
+            .topbar a {
+                width: 48%;
+                text-align: center;
+            }
+
+            .card-body {
+                padding: 15px;
+            }
+
+            .card-title {
+                font-size: 18px;
+            }
+
+            .card-text {
+                font-size: 14px;
+            }
+        }
+
+        /* Conditional Alignment */
+        .user-post {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .other-post {
+            display: flex;
+            justify-content: flex-start;
+        }
+    </style>
+
+    <div class="topbar">
+        <div class="group-info">
+            <img src="{{ val.photo }}" alt="Group photo">
+            <div>
+                <h3>{{ val.grpName }}</h3>
+                <p>{{ val.Detail }}</p>
+                <p>Created on: {{ val.date }}</p>
+            </div>
+        </div>
+        <div class="actions">
+            <a href="/managegroupmembers/{{ val.id }}" class="btn btn-info btn-sm">Members</a>
+            <a href="/share_code_to_group" class="btn btn-info btn-sm">Share</a>
+        </div>
+    </div>
+
+    <div class="container">
+        {% for i in ob %}
+            {% if i.USER.LOGIN.id == request.session.lid %}
+                <div class="row user-post">
+                    <div class="col-md-8">
+                        <div class="card2">
+                            <div class="card-body">
+                                <h5 class="card-title">Title: {{ i.topic }}</h5>
+                                <p class="card-text">Language: {{ i.Language }}</p>
+                                <a href="/individualgroupcodeview/{{ i.id }}" class="btn-view">View</a>
+                                <a href="/deletesharegroupdata/{{ i.id }}" class="btn-delete">Delete</a>
+                                {% if i.type == 'Editable' %}
+                                    <a href="/group_code_edit/{{ i.id }}" class="btn-edit">Edit</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="row other-post">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Title: {{ i.topic }}</h5>
+                                <p class="card-text">Language: {{ i.Language }}</p>
+                                <a href="/individualgroupcodeview/{{ i.id }}" class="btn-view">View</a>
+                                {% if i.type == 'Editable' %}
+                                    <a href="/group_code_edit/{{ i.id }}" class="btn-edit">Edit</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+{% endblock %}

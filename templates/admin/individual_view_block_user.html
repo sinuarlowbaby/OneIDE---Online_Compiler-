@@ -1,0 +1,84 @@
+{% extends 'admin/admin home.html'%}
+{% block body %}
+
+    <style>
+        .unique-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px; /* Increased padding for a larger box */
+            background-color: #ffffff;
+            border-radius: 15px; /* Slightly more rounded corners */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Slightly larger shadow */
+        }
+        .unique-user-img {
+            display: block;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .unique-h2 {
+            text-align: center;
+            color: #333;
+            font-size: 28px; /* Larger font size */
+            font-weight: 700; /* Bolder font weight */
+        }
+        .unique-user-details {
+            margin-bottom: 30px;
+        }
+        .unique-user-details p {
+            font-size: 18px; /* Larger font size */
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .unique-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 25px;
+            border: none;
+            transition: background-color 0.3s ease-in-out, transform 0.2s;
+        }
+        .unique-btn:hover {
+            transform: scale(1.05);
+        }
+        .unique-btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .unique-btn-danger:hover {
+            background-color: #c82333;
+        }
+        .unique-btn-success {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .unique-btn-success:hover {
+            background-color: #218838;
+        }
+    </style>
+
+    <div class="unique-container">
+        <img src="../media/{{ val.photo }}" alt="User Photo" class="unique-user-img">
+
+        <h2 class="unique-h2">{{ val.name }}</h2>
+
+        <div class="unique-user-details">
+            <p><strong>Age:</strong> {{ val.age }}</p>
+            <p><strong>Gender:</strong> {{ val.gender }}</p>
+            <p><strong>Email:</strong> {{ val.email }}</p>
+            <p><strong>Phone:</strong> {{ val.phone }}</p>
+        </div>
+
+        <div>
+            {% if val.LOGIN.type == 'user' %}
+                <a href="/block_user/{{ val.LOGIN.id }}" class="unique-btn unique-btn-danger">Block User</a>
+            {% else %}
+                <a href="/unblock_user/{{ val.LOGIN.id }}" class="unique-btn unique-btn-success">Unblock User</a>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

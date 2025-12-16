@@ -1,0 +1,189 @@
+{% extends 'user/user_home.html' %}
+{% block body %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Code to Group</title>
+    <style>
+        body {
+            background-color: #eef2f8;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .modern-share-container {
+            margin-top: 40px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .modern-share-header {
+            text-align: center;
+            color: #343a40;
+            font-weight: 600;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .modern-form-group {
+            margin-bottom: 20px;
+        }
+
+        .modern-form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .modern-form-group input[type="text"], .modern-form-group input[type="search"], .modern-form-group select, .modern-form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            font-size: 16px;
+            color: #495057;
+            background-color: #f7f7f7;
+        }
+
+        .modern-form-group input[type="text"]:focus, .modern-form-group input[type="search"]:focus, .modern-form-group select:focus, .modern-form-group textarea:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+        .modern-btn-share {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 30px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .modern-btn-share:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Custom styles for the select dropdown */
+        .modern-select-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .modern-select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            background-color: #f7f7f7;
+            color: #495057;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .modern-select-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            font-size: 18px;
+            color: #6c757d;
+        }
+
+        .modern-select-group-option {
+            display: flex;
+            align-items: center;
+        }
+
+        .modern-select-group-option img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        /* Styling for the code textarea */
+        .modern-textarea {
+            height: 200px; /* Adjust the height as needed */
+            resize: vertical; /* Allows resizing only vertically */
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .modern-share-header {
+                font-size: 24px;
+            }
+
+            .modern-btn-share {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="modern-share-container">
+    <h2 class="modern-share-header">Share To Group</h2>
+    <form method="post" action="/usergroupsharelist_post">
+    {% csrf_token %}
+    <div class="modern-form-group">
+    <label for="modern-language">Language</label>
+    <select id="modern-language" name="language" class="modern-select" required>
+        <option value="" disabled selected>Select a language</option>
+        <option value="Python">Python</option>
+        <option value="Java">Java</option>
+        <option value="C">C</option>
+        <option value="C++">C++</option>
+    </select>
+
+
+</div><div class="modern-form-group">
+    <label for="modern-language">Status</label>
+    <select id="modern-language" name="status" class="modern-select" required>
+        <option value="" disabled selected></option>
+        <option value="Static">Static</option>
+        <option value="Editable">Editable</option>
+    </select>
+</div>
+
+    <div class="modern-form-group">
+        <label for="modern-title">Title</label>
+        <input type="text" id="modern-title" name="title" required>
+    </div>
+    <div class="modern-form-group">
+        <label for="modern-group">Select Group</label>
+        <select id="modern-group" name="group" class="modern-select">
+            <option value="" disabled selected>Select a group</option>
+            {% for i in val %}
+                <option value="{{ i.GROUP.id }}">{{ i.GROUP.grpName }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="modern-form-group">
+        <label for="modern-code">Code</label>
+        <textarea id="modern-code" name="code" class="modern-textarea" required>{{ request.session.code }}</textarea>
+    </div>
+    <input type="submit" value="Share Code" class="modern-btn-share">
+</form>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+{% endblock %}

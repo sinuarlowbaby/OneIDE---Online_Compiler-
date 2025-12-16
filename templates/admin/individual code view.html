@@ -1,0 +1,99 @@
+{% extends 'admin/admin home.html'%}
+
+{% block body %}    <style>
+        body {
+            background-color: #f7f9fc;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .code-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word; /* Ensures the code breaks correctly for long lines */
+        }
+        .code-container code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 1rem;
+            color: #d63384; /* Styling the code */
+        }
+        .table th {
+            background-color: #343a40;
+            color: white;
+        }
+        h2 {
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="text-center">Individual Code View</h2>
+
+        <!-- Topic Table -->
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Topic</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ val.topic }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Code Section -->
+        <h4>Code:</h4>
+        <div class="code-container">
+            <pre><code id="editor">{{ val.code }}</code></pre>
+        </div>
+        <button  onclick="setdata()">Execute</button>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<script>
+    function setdata()
+    {
+        var codee=document.getElementById("editor").innerText
+
+         $.ajax(
+    {
+        type:"GET",
+        url: "/setsession1",
+        data:{
+                 s: codee
+
+
+        },
+        dataType: 'json',
+        success: function( data )
+        {
+            {% if val.language == "Python" %}
+                window.location='/compiler_python';
+            {% elif  val.language == "Java"  %}
+                window.location='/compiler_java';
+            {% elif  val.language == "C"  %}
+                window.location='/compiler_c';
+            {% elif  val.language == "C++"  %}
+                window.location='/compiler_cpp';
+
+            {% endif %}
+
+        }
+     })
+    }
+</script>
+
+</body>
+{% endblock %}

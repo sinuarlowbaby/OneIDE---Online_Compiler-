@@ -1,0 +1,273 @@
+{% extends 'user/user_home.html' %}
+{% block body %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <style>
+        /* General Styling */
+        .custom-chat-body {
+            background: linear-gradient(to right, #f0f4f8, #d9e2ec);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Removes unwanted scrollbars */
+        }
+
+        /* Chat Header */
+        .custom-chat-header {
+            background: #3a3f51;
+            padding: 15px;
+            color: white;
+            font-size: 22px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            border-radius: 12px 12px 0 0;
+            width: 100%;
+            max-width: 1000px; /* Increased width */
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Share Button */
+        .custom-chat-share-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.3s ease;
+        }
+
+        .custom-chat-share-btn:hover {
+            color: #ffca28;
+            transform: scale(1.1);
+        }
+
+        /* Chat Container */
+        .custom-chat-container {
+            width: 100%;
+            max-width: 1000px; /* Increased width */
+            background: white;
+            border-radius: 0 0 12px 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: auto;
+            align-items: center; /* Centers messages */
+        }
+
+        /* Chat Message */
+        .custom-chat-message {
+            padding: 16px 24px;
+            border-radius: 18px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 80%;
+            position: relative;
+            animation: custom-fadeInUp 0.4s ease-out;
+            font-size: 16px;
+        }
+
+        /* Sent & Received Messages */
+        .custom-chat-sent {
+            align-self: flex-end;
+            background: #daf0ff;
+            border-top-right-radius: 5px;
+        }
+
+        .custom-chat-received {
+            align-self: flex-start;
+            background: #f1f3f5;
+            border-top-left-radius: 5px;
+        }
+
+        /* Timestamp Styling */
+        .custom-chat-timestamp {
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* Button */
+        .custom-chat-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .custom-chat-btn:hover {
+            background: #e63946;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Fix */
+        @media (max-width: 768px) {
+            .custom-chat-container {
+                max-width: 90%;
+                padding: 15px;
+            }
+            .custom-chat-message {
+                max-width: 95%;
+            }
+            .custom-chat-header {
+                font-size: 18px;
+            }
+            .custom-chat-share-btn {
+                font-size: 14px;
+            }
+        }
+
+        /* Animation */
+        @keyframes custom-fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .custom-chat-header {
+            background: #3a3f51;
+            padding: 15px;
+            color: white;
+            font-size: 22px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            border-radius: 12px 12px 0 0;
+            width: 100%;
+            max-width: 1000px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .custom-chat-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .custom-chat-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .custom-chat-btn:hover {
+            background: #e63946;
+            transform: scale(1.05);
+        }
+        /* Container for the chat header */
+.custom-chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+}
+
+/* User profile link */
+.custom-chat-user {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+/* User image */
+.custom-chat-user-image {
+    width: 40px; /* Adjust the size as needed */
+    height: 40px; /* Adjust the size as needed */
+    border-radius: 50%; /* Makes the image circular */
+    border: 2px solid #007bff; /* Adds a border around the image */
+    margin-right: 10px; /* Adds space between the image and the name */
+    object-fit: cover; /* Ensures the image fits within the dimensions */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow for a modern look */
+}
+
+
+
+/* Share button */
+.custom-chat-share-btn {
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+}
+    </style>
+</head>
+<body class="custom-chat-body">
+<div class="custom-chat-header">
+    <!-- User profile link with image and name -->
+    <a href="{% url 'selfprofileview' clicked_user.LOGIN.id %}" class="custom-chat-user">
+        <img src="{{ clicked_user.photo.url }}" alt="{{ clicked_user.name }}" class="custom-chat-user-image">
+        {{ clicked_user.name }}
+    </a>
+
+    <!-- Message button -->
+    <a class="custom-chat-btn" href="{% url 'chat_view' clicked_user.LOGIN.id %}">➕ Message</a>
+
+    <!-- Share button -->
+    <a href="{% url 'individual_share' %}" class="custom-chat-share-btn">📤 Share</a>
+</div>
+    <div class="custom-chat-container">
+        {% for chat in chats %}
+            {% if chat.FROMUSER.LOGIN.id == current_user_id %}
+                <div class="custom-chat-message custom-chat-sent">
+                    <p><strong>Topic:</strong> {{ chat.topic }}</p>
+                    <p class="custom-chat-timestamp">
+                        <a href="/individualchatcodeview/{{ chat.id }}" class="custom-chat-btn">View Code</a>
+                        {{ chat.date }}
+                    </p>
+                </div>
+            {% else %}
+                <div class="custom-chat-message custom-chat-received">
+                    <p><strong>Topic:</strong> {{ chat.topic }}</p>
+                    <p class="custom-chat-timestamp">
+                        <a href="/individualchatcodeview/{{ chat.id }}" class="custom-chat-btn">View Code</a>
+{{ chat.date|date:"F j, Y, g:i a" }}                    </p>
+                </div>
+            {% endif %}
+        {% empty %}
+            <p style="text-align: center; color: #666;">No chat history with {{ clicked_user.name }}.</p>
+        {% endfor %}
+    </div>
+
+
+</body>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'user/user_home.html' %}
+{% block body %}
+    <style>
+        .edit-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .edit-container h2 {
+            text-align: center;
+            color: #2a5298;
+            margin-bottom: 20px;
+        }
+        .edit-container label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        .edit-container input, .edit-container select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .edit-btn {
+            background: #2a5298;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .edit-btn:hover {
+            background: #1e3c72;
+        }
+    </style>
+
+    <div class="edit-container">
+        <h2>Edit Profile</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label>Name:</label>
+            <input type="text" name="name" value="{{ user.name }}" required>
+
+            <label>Email:</label>
+            <input type="email" name="email" value="{{ user.email }}" required>
+
+            <label>Age:</label>
+            <input type="number" name="age" value="{{ user.age }}" required>
+
+            <label>Phone:</label>
+            <input type="text" name="phone" value="{{ user.phone }}" required>
+
+            <label>Address:</label>
+            <input type="text" name="address" value="{{ user.address }}" required>
+
+            <label>Gender:</label>
+            <select name="gender">
+                <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+                <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+            </select>
+
+            <label>Photo:</label>
+            <input type="file" name="photo">
+
+            <button type="submit" class="edit-btn">Save Changes</button>
+        </form>
+    </div>
+{% endblock %}

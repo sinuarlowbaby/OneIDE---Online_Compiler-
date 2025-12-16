@@ -1,0 +1,241 @@
+{% extends 'user/user_home.html' %}
+{% block body %}
+    <style>
+        /* General body styles */
+        body {
+            background-color: #e9ecef;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Modern container styling */
+        .unique-container {
+            margin-top: 50px;
+            padding: 30px;
+            border-radius: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h2, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #343a40;
+            font-weight: 600;
+        }
+
+        /* Card layout for displaying complaints */
+        .complaint-card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .complaint-card {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .complaint-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Styles for complaint text and date */
+        .complaint-content {
+            font-size: 16px;
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .complaint-date {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        /* Button for no reply */
+        .no-reply-button {
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 14px;
+            border: none;
+            background-color: #f8d7da;
+            color: #721c24;
+            transition: background-color 0.3s ease;
+        }
+
+        .no-reply-button:hover {
+            background-color: #f5c6cb;
+        }
+
+        /* Smaller submit button styling */
+        .submit-button {
+            width: auto;
+            margin-top: 20px;
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Animation for fade-in effect */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            .unique-container {
+                padding: 20px;
+            }
+
+            .complaint-card {
+                padding: 15px;
+            }
+
+            .submit-button {
+                width: 100%;
+            }
+        }
+    body {
+            background-color: #f7f9fc;
+            font-family: Arial, sans-serif;
+        }
+
+        .feedback-container {
+            margin-top: 50px;
+            padding: 30px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Complaint Textarea Styling */
+        .complaint-textarea {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f7f7f7;
+            min-height: 150px;
+            resize: vertical;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .complaint-textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Submit Button Styling */
+        .submit-button {
+            font-size: 0.875rem;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .submit-button:active {
+            background-color: #004085;
+            transform: scale(0.98);
+        }
+
+        /* Animation for text area */
+        @keyframes textareaAnimation {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .complaint-textarea {
+            animation: textareaAnimation 0.5s ease-out;
+        }
+    </style>
+
+    <div class="unique-container">
+        <h2>Sent Complaint</h2>
+
+        <!-- Form for submitting complaints -->
+
+        <form action="/replycomplaintuser_post" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="complaint">Complaint:</label>
+                <textarea name="complaint" id="complaint" class="complaint-textarea" placeholder="Enter your complaint here..." required></textarea>
+            </div>
+            <button type="submit" class="submit-button">Submit</button>
+        </form>
+    </div> <br>
+
+        <h3>Previous Raised Complaints</h3>
+        <div class="complaint-card-container">
+            {% for i in data %}
+                <div class="complaint-card">
+                    <div class="complaint-content">
+                        <strong>Complaint:</strong> {{ i.complaint }}
+                    </div>
+                    <div class="complaint-date">
+                        <strong>Date:</strong> {{ i.date }}
+                    </div>
+                    <div>
+                        {% if i.reply == 'pending' %}
+                            <button class="no-reply-button">No Reply</button>
+                        {% else %}
+                            <div><strong>Reply:</strong> {{ i.reply }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Include necessary JavaScript libraries -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+{% endblock %}

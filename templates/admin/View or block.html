@@ -1,0 +1,153 @@
+{% extends 'admin/admin home.html'%}
+
+{% block body %}
+<div class="unique-container mt-5">
+    <h2 class="unique-text-center mb-4">View or Block Users</h2>
+
+    <form action="vieworblocksearch" method="post" class="unique-form-inline mb-4 justify-content-center">
+        {% csrf_token %}
+        <div class="unique-input-group">
+            <input type="text" class="unique-form-control" placeholder="Search by name" name="name" value="{{ name1 }}" aria-label="Search" aria-describedby="unique-button-search">
+            <div class="unique-input-group-append">
+                <button class="unique-btn unique-btn-primary" type="submit" id="unique-button-search">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="unique-card-grid">
+        {% for i in val %}
+        <div class="unique-card">
+            <div class="unique-card-body">
+                <h5 class="unique-card-title">User: {{ i.name }}</h5>
+                <p class="unique-card-text">Email: {{ i.email }}</p>
+                <div class="unique-actions">
+                    <a href="individual_user/{{ i.id }}" class="unique-btn unique-btn-info unique-btn-sm">View</a>
+                    {% if i.LOGIN.type == 'user' %}
+                    <a href="/block_user/{{ i.LOGIN.id }}" class="unique-btn unique-btn-danger unique-btn-sm">Block</a>
+                    {% else %}
+                    <a href="/unblock_user/{{ i.LOGIN.id }}" class="unique-btn unique-btn-success unique-btn-sm">Unblock</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .unique-body {
+        background-color: #f0f2f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .unique-container {
+        margin: 30px auto;
+        padding: 40px; /* Increased padding for a larger box */
+        background-color: #ffffff;
+        border-radius: 15px; /* Slightly more rounded corners */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Slightly larger shadow */
+        max-width: 1200px; /* Increased max-width for a larger box */
+    }
+    .unique-text-center {
+        font-weight: 600;
+        color: #333;
+        text-align: center;
+    }
+    .unique-form-inline {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .unique-input-group {
+        display: flex;
+        align-items: center;
+    }
+    .unique-form-control {
+        border-radius: 20px;
+        padding: 10px 15px;
+        border: 1px solid #ced4da;
+        transition: border-color 0.3s ease-in-out;
+    }
+    .unique-form-control:focus {
+        border-color: #80bdff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+    }
+    .unique-input-group-append .unique-btn {
+        border-radius: 20px;
+        padding: 10px 15px;
+    }
+    .unique-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    .unique-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .unique-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+    .unique-card-body {
+        padding: 20px;
+        text-align: center;
+    }
+    .unique-card-title {
+        font-size: 18px;
+        color: #333;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    .unique-card-text {
+        font-size: 14px;
+        color: #757575;
+        margin-bottom: 15px;
+    }
+    .unique-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+    .unique-btn {
+        margin-right: 5px;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 20px;
+        transition: background-color 0.3s ease-in-out, transform 0.2s;
+    }
+    .unique-btn:hover {
+        transform: scale(1.05);
+    }
+    .unique-btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+    .unique-btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .unique-btn-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+    .unique-btn-info:hover {
+        background-color: #138496;
+    }
+    .unique-btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    .unique-btn-danger:hover {
+        background-color: #c82333;
+    }
+    .unique-btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+    .unique-btn-success:hover {
+        background-color: #218838;
+    }
+</style>
+{% endblock %}

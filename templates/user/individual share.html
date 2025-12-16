@@ -1,0 +1,405 @@
+{% extends 'user/user_home.html' %}
+{% block body %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Code to Friend</title>
+    <style>
+        body {
+            background-color: #eef2f8;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .modern-share-container {
+            margin-top: 40px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .modern-share-header {
+            text-align: center;
+            color: #343a40;
+            font-weight: 600;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .modern-form-group {
+            margin-bottom: 20px;
+        }
+
+        .modern-form-group label {
+            display: block;
+            font-weight: 600;
+            color: #343a40;
+            margin-bottom: 10px;
+        }
+
+        /* Input and Select Styling */
+        .modern-form-group input[type="text"],
+        .modern-form-group select,
+        .modern-form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #f7f7f7;
+            color: #495057;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .modern-form-group input[type="text"]:focus,
+        .modern-form-group select:focus,
+        .modern-form-group textarea:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+            background-color: #ffffff;
+        }
+
+        /* Textarea Styling */
+        .modern-form-group textarea {
+            height: 200px;
+            resize: vertical;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* Search box styling */
+        .user-search-box {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            background-color: #f7f7f7;
+            margin-bottom: 10px;
+        }
+
+        /* User list container */
+        .user-checkbox-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #f7f7f7;
+        }
+
+        /* Custom scrollbar */
+        .user-checkbox-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .user-checkbox-list::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 5px;
+        }
+
+        .user-checkbox-list::-webkit-scrollbar-thumb:hover {
+            background: #0056b3;
+        }
+
+        /* Checkbox styling */
+        .user-checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        .user-checkbox-item input {
+            margin-right: 10px;
+        }
+
+        /* Submit button */
+        .modern-btn-share {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 30px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .modern-btn-share:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .modern-form-group small {
+            display: block;
+            color: #6c757d;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="modern-share-container">
+    <h2 class="modern-share-header">Share Code to Friend</h2>
+    <form method="post" action="/individual_share_post">
+        {% csrf_token %}
+
+        <!-- User Selection -->
+        <div class="modern-form-group">
+            <label for="custom-user-search">To:</label>
+            <input type="text" id="custom-user-search" class="user-search-box" placeholder="Search users...">
+            <div class="user-checkbox-list">
+                {% for user in val %}
+                    {% if user.LOGIN.id != current_user and user.LOGIN.type != 'admin' %}
+                        <div class="user-checkbox-item">
+                            <input type="checkbox" name="touser" value="{{ user.id }}" id="custom-user_{{ user.id }}">
+                            <label for="custom-user_{{ user.id }}">{{ user.LOGIN.username }} ({{ user.name }})</label>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Language Selection -->
+        <div class="modern-form-group">
+            <label for="modern-language">Language</label>
+            <select id="modern-language" name="language" class="modern-select" required>
+                <option value="" disabled selected>Select a language</option>
+                <option value="Python">Python</option>
+                <option value="Java">Java</option>
+                <option value="C">C</option>
+                <option value="C++">C++</option>
+            </select>
+        </div>
+
+        <!-- Title Input -->
+        <div class="modern-form-group">
+            <label for="modern-title">Title</label>
+            <input type="text" id="modern-title" name="title" required>
+        </div>
+
+        <!-- Code Input -->
+        <div class="modern-form-group">
+            <label for="modern-code">Code</label>
+            <textarea id="modern-code" name="code" class="modern-textarea" required>{{ request.session.code }}</textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <input type="submit" value="Share Code" class="modern-btn-share">
+    </form>
+</div>
+<!-- JavaScript for Searchable Checkbox -->
+<script>
+document.getElementById('custom-user-search').addEventListener('input', function() {
+    let filter = this.value.toLowerCase();
+    let checkboxes = document.querySelectorAll('.user-checkbox-item');
+
+    checkboxes.forEach(item => {
+        let text = item.textContent.toLowerCase();
+        if (text.includes(filter)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+</script>
+
+</body>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{##}
+{#<!-- #}
+{##}
+{#{% extends 'user/user_home.html' %}#}
+{#{% block body %}#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />#}
+{#    <title>Share Code to Group</title>#}
+{#    <style>#}
+{#        body {#}
+{#            background-color: #eef2f8;#}
+{#            font-family: 'Arial', sans-serif;#}
+{#        }#}
+{##}
+{#        .modern-share-container {#}
+{#            margin-top: 40px;#}
+{#            padding: 30px;#}
+{#            background-color: #ffffff;#}
+{#            border-radius: 15px;#}
+{#            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);#}
+{#            max-width: 800px;#}
+{#            margin: auto;#}
+{#        }#}
+{##}
+{#        .modern-share-header {#}
+{#            text-align: center;#}
+{#            color: #343a40;#}
+{#            font-weight: 600;#}
+{#            margin-bottom: 30px;#}
+{#            font-size: 28px;#}
+{#        }#}
+{##}
+{#        .modern-form-group {#}
+{#            margin-bottom: 20px;#}
+{#        }#}
+{##}
+{#        .modern-form-group label {#}
+{#            display: block;#}
+{#            margin-bottom: 10px;#}
+{#            font-weight: 600;#}
+{#            color: #343a40;#}
+{#        }#}
+{##}
+{#        .modern-form-group input[type="text"], .modern-form-group input[type="search"], .modern-form-group select, .modern-form-group textarea {#}
+{#            width: 100%;#}
+{#            padding: 14px;#}
+{#            border: 1px solid #ced4da;#}
+{#            border-radius: 8px;#}
+{#            transition: all 0.3s ease-in-out;#}
+{#            font-size: 16px;#}
+{#            color: #495057;#}
+{#            background-color: #f7f7f7;#}
+{#        }#}
+{##}
+{#        .modern-form-group input[type="text"]:focus, .modern-form-group input[type="search"]:focus, .modern-form-group select:focus, .modern-form-group textarea:focus {#}
+{#            border-color: #80bdff;#}
+{#            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);#}
+{#        }#}
+{##}
+{#        .modern-btn-share {#}
+{#            display: block;#}
+{#            width: 100%;#}
+{#            padding: 15px;#}
+{#            border: none;#}
+{#            border-radius: 30px;#}
+{#            background-color: #007bff;#}
+{#            color: #fff;#}
+{#            font-size: 16px;#}
+{#            font-weight: 500;#}
+{#            text-align: center;#}
+{#            transition: all 0.3s ease-in-out;#}
+{#        }#}
+{##}
+{#        .modern-btn-share:hover {#}
+{#            background-color: #0056b3;#}
+{#            transform: scale(1.05);#}
+{#        }#}
+{##}
+{#        /* Ensure the search bar is visible */#}
+{#        .select2-container--default .select2-search--dropdown {#}
+{#            display: block !important;#}
+{#        }#}
+{##}
+{#        /* Style the dropdown options */#}
+{#        .select2-results__option {#}
+{#            padding: 8px;#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<div class="modern-share-container">#}
+{#    <h2 class="modern-share-header">Share To Friend</h2>#}
+{#    <form method="post" action="/individual_share_post">#}
+{#        {% csrf_token %}#}
+{#        <div class="modern-form-group">#}
+{#            <label for="name">To:</label>#}
+{#            <select name="touser" class="unique-form-control select2" required>#}
+{#                <option value="">Select a user</option>#}
+{#                {% for user in val %}#}
+{#                    <option value="{{ user.id }}">{{ user.LOGIN.username }} ({{ user.name }})</option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+{#        </div>#}
+{#        <div class="modern-form-group">#}
+{#            <label for="modern-language">Language</label>#}
+{#            <select id="modern-language" name="language" class="modern-select" required>#}
+{#                <option value="" disabled selected>Select a language</option>#}
+{#                <option value="Python">Python</option>#}
+{#                <option value="Java">Java</option>#}
+{#                <option value="C">C</option>#}
+{#                <option value="C++">C++</option>#}
+{#            </select>#}
+{#        </div>#}
+{#        <div class="modern-form-group">#}
+{#            <label for="modern-title">Title</label>#}
+{#            <input type="text" id="modern-title" name="title" required>#}
+{#        </div>#}
+{#        <div class="modern-form-group">#}
+{#            <label for="modern-code">Code</label>#}
+{#            <textarea id="modern-code" name="code" class="modern-textarea" required>{{ request.session.code }}</textarea>#}
+{#        </div>#}
+{#        <input type="submit" value="Share Code" class="modern-btn-share">#}
+{#    </form>#}
+{#</div>#}
+{##}
+{# Include jQuery #}
+{#<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>#}
+{#Include Select2 JS #}
+{#<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>#}
+{##}
+{#<script>#}
+{#    $(document).ready(function() {#}
+{#        $('.select2').select2({#}
+{#            placeholder: "Search for a user...",#}
+{#            allowClear: true,#}
+{#            width: '100%',#}
+{#            minimumResultsForSearch: 0, // Always show the search bar#}
+{#            templateResult: formatUser, // Customize how options are displayed#}
+{#            templateSelection: formatUserSelection // Customize how selected options are displayed#}
+{#        });#}
+{##}
+{#        // Function to customize the display of options#}
+{#        function formatUser(user) {#}
+{#            if (!user.id) {#}
+{#                return user.text;#}
+{#            }#}
+{#            var $user = $(#}
+{#                '<div><strong>' + user.text.split(' (')[0] + '</strong><br><small>' + user.text.split(' (')[1] + '</small></div>'#}
+{#            );#}
+{#            return $user;#}
+{#        }#}
+{##}
+{#        // Function to customize the display of selected options#}
+{#        function formatUserSelection(user) {#}
+{#            return user.text.split(' (')[0]; // Only show the username in the selected box#}
+{#        }#}
+{#    });#}
+{#</script>#}
+{##}
+{#</body>#}
+{#{% endblock %} -->#}
