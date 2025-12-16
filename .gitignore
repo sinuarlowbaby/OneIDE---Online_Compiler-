@@ -6,3 +6,13 @@ db.sqlite3
 /*.log
 *.sqlite3
 .env
+.idea/
+.vscode/
+media/
+# Security: SSH Keys
+*.pem
+*.pub
+id_rsa
+id_rsa.pub
+ssh
+ssh.pub

@@ -1,98 +1,0 @@
-58	Java	Hello World	public class Main {\
-    public static void main(String[] args) {\
-        // Print "Hello, World!" to the console\
-        System.out.println("Hello, World!");\
-    }\
-}\
-\
-\
-	4
-60	C	factorial	#include <stdio.h>\
-\
-int main() {\
-    int n, i;\
-    unsigned long long factorial = 1; // Use unsigned long long to handle larger results\
-\
-    printf("Enter a positive integer: ");\
-    scanf("%d", &n);\
-\
-    if (n < 0) {\
-        printf("Factorial is not defined for negative numbers.\\n");\
-    } else {\
-        for (i = 1; i <= n; i++) {\
-            factorial *= i;\
-        }\
-        printf("Factorial of %d = %llu\\n", n, factorial);\
-    }\
-\
-    return 0;\
-}\
-	4
-61	C++	print Fibonacci	#include <iostream>\
-using namespace std;\
-void printFibonacci(int n) {\
-    int t1 = 0, t2 = 1, nextTerm;\
-    cout << "Fibonacci Sequence: " << t1 << ", " << t2;\
-    for (int i = 1; i <= n - 2; ++i) {\
-        nextTerm = t1 + t2;\
-        cout << ", " << nextTerm;\
-        t1 = t2;\
-        t2 = nextTerm;\
-    }\
-    cout << endl;\
-}\
-int main() {\
-    int n;\
-    cout << "Enter the number of terms: ";\
-    cin >> n;\
-    if (n <= 0) {\
-        cout << "Please enter a positive integer." << endl;\
-    } else {\
-        printFibonacci(n);\
-    }\
-    return 0;\
-}\
-\
-\
-	4
-62	C	Fibonacci	#include <iostream>\
-using namespace std;\
-void printFibonacci(int n) {\
-    int t1 = 0, t2 = 1, nextTerm;\
-    cout << "Fibonacci Sequence: " << t1 << ", " << t2;\
-    for (int i = 1; i <= n - 2; ++i) {\
-        nextTerm = t1 + t2;\
-        cout << ", " << nextTerm;\
-        t1 = t2;\
-        t2 = nextTerm;\
-    }\
-    cout << endl;\
-}\
-int main() {\
-    int n;\
-    cout << "Enter the number of terms: ";\
-    cin >> n;\
-    if (n <= 0) {\
-        cout << "Please enter a positive integer." << endl;\
-    } else {\
-        printFibonacci(n);\
-    }\
-    return 0;\
-}\
-\
-\
-\
-	4
-66	C	hello	print("Helo World!")\
-\
-\
-	4
-67	Python	hello world	print("Helo World!")\
-\
-	4
-69	Python	Generate random password	import random\
-passlen = int(input("enter the length of password : "))\
-s="abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()?"\
-p = "".join(random.sample(s,passlen ))\
-print(p)\
-	4
