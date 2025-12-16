@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 # Create your views here.
 from app.models import *
+from django.contrib.auth.hashers import make_password
 
 
 def login(request):
@@ -28,34 +29,44 @@ def logout(request):
 
 
 
+# In views.py
+
 def logincode(request):
     username = request.POST['username']
     password = request.POST['password']
     try:
+        # 1. Check your custom table
         ob1 = login_table.objects.get(username=username, password=password)
+
         if ob1.type == 'admin':
             request.session['lid'] = ob1.id
-            print("ob ",ob1.id)
-            ob3 = auth.authenticate(username='admin', password='admin')
-            if ob3 is not None:
-                auth.login(request, ob3)
+            # Only authenticate as admin if they ARE the admin
+            user = auth.authenticate(username='admin', password='admin')
+            if user:
+                auth.login(request, user)
             return HttpResponse('''<script> alert("login success ");window.location="/adminhome2" </script>''')
+
         elif ob1.type == 'user':
-            ob3 = auth.authenticate(username='admin', password='admin')
-            if ob3 is not None:
-                auth.login(request, ob3)
-            request.session['ccode'] = "na"
+            # DO NOT run auth.login(admin) here!
+            # Just set your custom session variables
             request.session['lid'] = ob1.id
             obb = user_table.objects.filter(LOGIN=ob1.id)
-            request.session['img'] = obb[0].photo.url
-            request.session['name'] = obb[0].name
-            return HttpResponse('''<script> alert("login success ");window.location="/" </script>''')
+
+            # Safety check: make sure user_table entry exists
+            if obb.exists():
+                request.session['img'] = obb[0].photo.url
+                request.session['name'] = obb[0].name
+                request.session['ccode'] = "na"
+                return HttpResponse('''<script> alert("login success ");window.location="/" </script>''')
+            else:
+                 return HttpResponse('''<script> alert("User profile missing");window.location="/login" </script>''')
+
         elif ob1.type == 'blocked':
-            return HttpResponse('''<script> alert("Access restricted. Your account is blocked.");window.location="/login" </script>''')
-        else:
-            return HttpResponse('''<script> alert("No user");window.location="/login" </script>''')
-    except:
+            return HttpResponse('''<script> alert("Access restricted.");window.location="/login" </script>''')
+
+    except login_table.DoesNotExist:
         return HttpResponse('''<script> alert("Invalid Username or Password ");window.location="/" </script>''')
+
 
 
 def registration(request):
@@ -85,7 +96,7 @@ def registration_post(request):
 
         ob=login_table()
         ob.username=username
-        ob.password=password
+        ob.password = make_password(password)
         ob.type="user"
         ob.save()
 
@@ -1184,7 +1195,7 @@ def individual_user_group(request,id):
 
 @login_required(login_url='/login')
 def delete_user_group_member (request,id):
-    ob = group_members_table.objects.get(id=id)
+    ob = get_object_or_404(group_members_table, id=id, GROUP__USER__LOGIN__id=request.session['lid'])
     ob.delete()
     kk = request.session['gid']
     return HttpResponse(f'''<script>alert('Group member Deleted');window.location='/managegroupmembers/{kk}'</script>''')
