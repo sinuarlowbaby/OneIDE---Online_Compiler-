@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+import dj_database_url
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -89,15 +90,24 @@ WSGI_APPLICATION = 'OneIDE.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',  # Changed from mysql
+#         'NAME': 'oneide_db',                        # The DB name you created in Step 3
+#         'USER': 'postgres',                         # Default Postgres user is usually 'postgres'
+#         'PASSWORD': 'SinU',       # The password you set when installing Postgres
+#         'HOST': 'localhost',
+#         'PORT': '5432',                             # Default Postgres port
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # Changed from mysql
-        'NAME': 'oneide_db',                        # The DB name you created in Step 3
-        'USER': 'postgres',                         # Default Postgres user is usually 'postgres'
-        'PASSWORD': 'SinU',       # The password you set when installing Postgres
-        'HOST': 'localhost',
-        'PORT': '5432',                             # Default Postgres port
-    }
+    'default': dj_database_url.config(
+        # This is the "fallback" for when you run locally on your laptop.
+        # It uses the values from your local .env file.
+        default=f"postgres://postgres:{os.getenv('DB_PASSWORD')}@localhost:5432/oneide_db",
+        conn_max_age=600
+    )
 }
 
 
