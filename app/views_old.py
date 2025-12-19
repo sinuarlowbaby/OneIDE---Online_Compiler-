@@ -31,87 +31,99 @@ def logout(request):
 
 # In views.py
 
+from django.contrib import auth
+
 def logincode(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    try:
-        # 1. Check your custom table
-        ob1 = login_table.objects.get(username=username, password=password)
-
-        if ob1.type == 'admin':
-            request.session['lid'] = ob1.id
-            # Only authenticate as admin if they ARE the admin
-            user = auth.authenticate(username='admin', password='admin')
-            if user:
-                auth.login(request, user)
-            return HttpResponse('''<script> alert("login success ");window.location="/adminhome2" </script>''')
-
-        elif ob1.type == 'user':
-            # DO NOT run auth.login(admin) here!
-            # Just set your custom session variables
-            request.session['lid'] = ob1.id
-            obb = user_table.objects.filter(LOGIN=ob1.id)
-
-            # Safety check: make sure user_table entry exists
-            if obb.exists():
-                request.session['img'] = obb[0].photo.url
-                request.session['name'] = obb[0].name
-                request.session['ccode'] = "na"
-                return HttpResponse('''<script> alert("login success ");window.location="/" </script>''')
-            else:
-                 return HttpResponse('''<script> alert("User profile missing");window.location="/login" </script>''')
-
-        elif ob1.type == 'blocked':
-            return HttpResponse('''<script> alert("Access restricted.");window.location="/login" </script>''')
-
-    except login_table.DoesNotExist:
-        return HttpResponse('''<script> alert("Invalid Username or Password ");window.location="/" </script>''')
-
-
+    if request.method == "POST":
+        u = request.POST['username']
+        p = request.POST['password']
+        
+        # 1. Authenticate checks the built-in User table securely
+        user = auth.authenticate(username=u, password=p)
+        
+        if user is not None:
+            # 2. Actually log THEM in (creates the session securely)
+            auth.login(request, user)
+            
+            # 3. Check their profile type (User vs Admin)
+            try:
+                # Access the profile we linked in Step 1
+                if user.is_superuser:
+                    return HttpResponse('''<script>window.location="/adminhome2"</script>''')
+                
+                elif user.profile.type == 'user':
+                    # Set session data for your templates if needed
+                    request.session['name'] = user.username
+                    request.session['img'] = user.profile.photo.url
+                    return HttpResponse('''<script>alert("Login Success"); window.location="/"</script>''')
+                    
+                elif user.profile.type == 'blocked':
+                     auth.logout(request) # Kick them out
+                     return HttpResponse('''<script>alert("Account Blocked"); window.location="/adminhome2"</script>''')
+                     
+            except user_table.DoesNotExist:
+                # This handles superusers created via terminal who don't have a profile yet
+                return HttpResponse('''<script>window.location="/adminhome2"</script>''')
+        else:
+            return HttpResponse('''<script>alert("Invalid Username or Password"); window.location="/adminhome2"</script>''')
+        
 
 def registration(request):
     return render(request,"registration.html")
 
 
 
+from django.shortcuts import render, HttpResponse
+from django.contrib.auth.models import User
+# Ensure you import your UserProfile model (rename user_table to UserProfile if you followed the guide)
+from .models import user_table # or UserProfile
+
 def registration_post(request):
-    name=request.POST["n1"]
-    email=request.POST["emaill"]
-    username=request.POST["usrname"]
-    password=request.POST["pwd"]
-    age=request.POST["age"]
-    gender=request.POST["radio"]
-    phone=request.POST["phone"]
-    address=request.POST["address"]
-    PHOTO=request.FILES["file"]
-    fs=FileSystemStorage()
-    fn=fs.save(PHOTO.name,PHOTO)
+    if request.method == "POST":
+        try:
+            # 1. Fetch data using YOUR ORIGINAL HTML NAMES
+            name = request.POST['n1']
+            email = request.POST['emaill']    # Was 'n2' in the error
+            username = request.POST['usrname']
+            password = request.POST['pwd']
+            age = request.POST['age']
+            gender = request.POST['radio']
+            phone = request.POST['phone']
+            address = request.POST['address']
+            
+            # Handle Image Upload safely
+            if 'file' in request.FILES:
+                photo = request.FILES['file']
+            else:
+                return HttpResponse("Please upload a photo")
 
-    xx=login_table.objects.filter(username=username)
+            # 2. Check if user already exists
+            if User.objects.filter(username=username).exists():
+                 return HttpResponse('''<script>alert("Username already exists"); window.location="/registration"</script>''')
+            
+            # 3. Create the Safe Django User (Handles hashing automatically)
+            # We use 'username' for login. You can also use email if you prefer.
+            user = User.objects.create_user(username=username, email=email, password=password)
+            
+            # 4. Create your Custom Profile linked to it
+            # Note: I am using 'user_table' here since that is your model name. 
+            # If you renamed it to 'UserProfile', change it below.
+            profile = user_table() 
+            profile.user = user  # <--- LINKING TO THE AUTH SYSTEM
+            profile.name = name
+            profile.age = age
+            profile.gender = gender
+            profile.phone = phone
+            profile.address = address
+            profile.photo = photo
+            profile.type = 'user'
+            profile.save()
+            
+            return HttpResponse('''<script>alert("Registered Successfully"); window.location="/login"</script>''')
 
-    if len(xx)>0:
-        return HttpResponse('''<script> alert('User name already Exists');window.location='/registration'</script>''')
-
-    else:
-
-        ob=login_table()
-        ob.username=username
-        ob.password = make_password(password)
-        ob.type="user"
-        ob.save()
-
-        ob1=user_table()
-        ob1.LOGIN=ob
-        ob1.name = name
-        ob1.email = email
-        ob1.age = age
-        ob1.gender = gender
-        ob1.phone = phone
-        ob1.address = address
-        ob1.photo = fn
-
-        ob1.save()
-        return HttpResponse('''<script> alert('Account created');window.location='/'</script>''')
+        except Exception as e:
+            print(e) # Print error to terminal for debugging
+            return HttpResponse(f"Error during registration: {e}")
 
 
 from django.core.mail import send_mail

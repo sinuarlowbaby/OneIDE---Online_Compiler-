@@ -1,114 +1,130 @@
 {% extends 'user/user_home.html' %}
 {% block body %}
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-        .profile-body {
-            font-family: 'Poppins', sans-serif;
-            border-radius: 15px;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-            background: linear-gradient(135deg, #4458DC, #C750B3);
-        }
-        .profile-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            animation: fadeIn 1s ease-in-out;
-        }
-        .profile-header {
-            font-size: 32px;
-            font-weight: 600;
-            color: #2a5298;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .profile-info img {
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border: 5px solid #1e3c72;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .profile-info img:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
-        .profile-info h5 {
-            font-size: 24px;
-            font-weight: 600;
-            color: #333;
-            margin: 10px 0;
-        }
-        .profile-info p {
-            font-size: 18px;
-            color: #555;
-            margin: 8px 0;
-            font-weight: 400;
-        }
-        .profile-info p strong {
-            color: #1e3c72;
-            font-weight: 600;
-        }
-        .profile-btn-custom {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
-            font-size: 18px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-            margin-top: 25px;
-        }
-        .profile-btn-custom:hover {
-            background: linear-gradient(135deg, #2a5298, #1e3c72);
-            transform: translateY(-2px);
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    .profile-body {
+        font-family: 'Poppins', sans-serif;
+        border-radius: 15px;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+        background: linear-gradient(135deg, #4458DC, #C750B3);
+    }
 
-    <div class="profile-body">
-        <div class="profile-container">
-            <h2 class="profile-header">User Profile</h2>
-            <div class="profile-info">
-                <img src="../media/{{ val.photo }}" alt="User Photo">
-                <h5>{{ val.name }}</h5>
-                <p><strong>Age:</strong> {{ val.age }}</p>
-                <p><strong>Gender:</strong> {{ val.gender }}</p>
-                <p><strong>Email:</strong> {{ val.email }}</p>
-                <p><strong>Phone:</strong> {{ val.phone }}</p>
-            </div>
-            {% if passed_id == user_id %}
-<a href="{% url 'edit_profile' user_id %}">
-    <button class="profile-btn-custom">Edit Profile</button>
-</a>
+    .profile-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        padding: 40px;
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .profile-header {
+        font-size: 32px;
+        font-weight: 600;
+        color: #2a5298;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .profile-info img {
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border: 5px solid #1e3c72;
+        margin-bottom: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .profile-info img:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-info h5 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+        margin: 10px 0;
+    }
+
+    .profile-info p {
+        font-size: 18px;
+        color: #555;
+        margin: 8px 0;
+        font-weight: 400;
+    }
+
+    .profile-info p strong {
+        color: #1e3c72;
+        font-weight: 600;
+    }
+
+    .profile-btn-custom {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 30px;
+        font-size: 18px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+        margin-top: 25px;
+    }
+
+    .profile-btn-custom:hover {
+        background: linear-gradient(135deg, #2a5298, #1e3c72);
+        transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="profile-body">
+    <div class="profile-container">
+        <h2 class="profile-header">User Profile</h2>
+        <div class="profile-info">
+            {% if val.photo %}
+            <img src="{{ val.photo.url }}" alt="User Photo">
+            {% else %}
+            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Default User Photo">
             {% endif %}
 
+            <h5>{{ val.name }}</h5>
+            <p><strong>Age:</strong> {{ val.age|default:"Not Provided" }}</p>
+            <p><strong>Gender:</strong> {{ val.gender }}</p>
+            <p><strong>Email:</strong> {{ val.LOGIN.email }}</p>
+            <p><strong>Phone:</strong> {{ val.phone|default:"Not Provided" }}</p>
         </div>
-    </div>
+        {% if passed_id == user_id %}
+        <a href="{% url 'edit_profile' user_id %}">
+            <button class="profile-btn-custom">Edit Profile</button>
+        </a>
+        {% endif %}
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}

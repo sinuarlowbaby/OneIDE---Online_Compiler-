@@ -1,4 +1,3 @@
-
 <html>
 
 <head>
@@ -15,7 +14,8 @@
   <title>OneIDE</title>
 
   <!-- slider stylesheet -->
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="../../static/user/css/bootstrap.css" />
@@ -41,7 +41,8 @@
               OneIDE
             </span>
           </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="s-1"> </span>
             <span class="s-2"> </span>
             <span class="s-3"> </span>
@@ -52,14 +53,16 @@
               <ul class="navbar-nav  ">
                 <li class="nav-item ">
                   <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-{#                </li>#}
-{#                  <li class="nav-item ">#}
-{#                  <a class="nav-link" href="/usercodesave">Save </a>#}
-{#                </li>#}
-                  <li class="nav-item">
+
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="/usercodesave">Save </a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link" href="/userviewcode">Programs </a>
-                </li></li>
-                  <li class="nav-item">
+                </li>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link" href="/sharetofriend">Chat </a>
                 </li>
                 <li class="nav-item ">
@@ -70,11 +73,11 @@
                 <li class="nav-item">
                   <a class="nav-link" href="/exampleprogram">Samples </a>
                 </li>
-                    {% if user.is_authenticated %}
-                     <li class="nav-item"> <a class="nav-link" href="/logout">Logout</a> </li>
-                  {% else %}
-                      <li class="nav-item"> <a class="nav-link" href="/login">Login</a> </li>
-                  {% endif %}
+                {% if user.is_authenticated %}
+                <li class="nav-item"> <a class="nav-link" href="/logout">Logout</a> </li>
+                {% else %}
+                <li class="nav-item"> <a class="nav-link" href="/login">Login</a> </li>
+                {% endif %}
               </ul>
             </div>
           </div>
@@ -89,7 +92,7 @@
   <!-- about section -->
   <section class="about_section layout_padding">
     <div class="container">
-      
+
       {% block body %}
       {% endblock %}
 

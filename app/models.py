@@ -6,20 +6,23 @@ from django.utils.timezone import now  # Correct import for timezone-aware times
 # Create your models here.
 
 
-class login_table(models.Model):
-    username = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
-    type = models.CharField(max_length=10)
 
 class user_table(models.Model):
-    LOGIN = models.OneToOneField(login_table, on_delete=models.CASCADE)
+    # Link to the built-in User (handles username, password, email)
+    LOGIN = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    
+    # Keep your extra fields here
     name = models.CharField(max_length=100)
-    email = models.CharField(max_length=320)
-    age = models.IntegerField()
-    phone = models.BigIntegerField()
-    photo = models.ImageField(upload_to='photos/')
-    address = models.CharField(max_length=100)
-    gender = models.CharField(max_length=10)
+    email = models.EmailField() # matching typical email field
+    age = models.IntegerField(null=True, blank=True)
+    phone = models.BigIntegerField(null=True, blank=True)
+    address = models.CharField(max_length=100, null=True, blank=True)
+    gender = models.CharField(max_length=100, null=True, blank=True)
+    photo = models.ImageField(upload_to='media/', null=True, blank=True)
+    type = models.CharField(max_length=15, default='user') # To track user/admin/blocked
+
+    def __str__(self):
+        return self.LOGIN.username
 
 
 class ChatMessage_table(models.Model):
