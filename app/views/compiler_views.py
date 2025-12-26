@@ -4,37 +4,29 @@ from django.http import JsonResponse
 
 # USER COMPILER
 
-@login_required(login_url='/login')
 def user_python(request):
     return render(request, "user/python compiler.html")
 
-@login_required(login_url='/login')
 def user_java(request):
     return render(request, "user/java compiler.html")
 
-@login_required(login_url='/login')
 def user_c(request):
     return render(request, "user/C Compiler.html")
 
-@login_required(login_url='/login')
 def user_cpp(request):
     return render(request, "user/C++ Compiler.html")
 
 # ADMIN COMPILER
 
-@login_required(login_url='/login')
 def admin_python(request):
     return render(request, "admin/admin python.html")
 
-@login_required(login_url='/login')
 def admin_java(request):
     return render(request, "admin/admin java.html")
 
-@login_required(login_url='/login')
 def admin_c(request):
     return render(request, "admin/admin C Compiler.html")
 
-@login_required(login_url='/login')
 def admin_cpp(request):
     return render(request, "admin/admin C++ Compiler.html")
 
