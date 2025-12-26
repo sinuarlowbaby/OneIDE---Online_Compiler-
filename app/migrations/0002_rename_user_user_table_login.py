@@ -3,6 +3,26 @@
 from django.db import migrations
 
 
+def rename_column_safely(apps, schema_editor):
+    table_name = 'app_user_table'
+    # Use introspection to check if the column exists
+    with schema_editor.connection.cursor() as cursor:
+        columns = [c.name for c in schema_editor.connection.introspection.get_table_description(cursor, table_name)]
+    
+    if 'user_id' in columns:
+        print(f"Detected 'user_id' column in {table_name}. Renaming to 'LOGIN_id'...")
+        with schema_editor.connection.cursor() as cursor:
+            if schema_editor.connection.vendor == 'postgresql':
+                cursor.execute(f'ALTER TABLE "{table_name}" RENAME COLUMN "user_id" TO "LOGIN_id"')
+            elif schema_editor.connection.vendor == 'sqlite':
+                 cursor.execute(f'ALTER TABLE "{table_name}" RENAME COLUMN "user_id" TO "LOGIN_id"')
+            else:
+                 # Fallback
+                 cursor.execute(f'ALTER TABLE {table_name} RENAME COLUMN user_id TO LOGIN_id')
+    else:
+        print(f"Column 'user_id' not found in {table_name}. Assuming already renamed to 'LOGIN_id'. skipping rename.")
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -10,9 +30,16 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RenameField(
-            model_name='user_table',
-            old_name='user',
-            new_name='LOGIN',
+        migrations.SeparateDatabaseAndState(
+            database_operations=[
+                migrations.RunPython(rename_column_safely),
+            ],
+            state_operations=[
+                migrations.RenameField(
+                    model_name='user_table',
+                    old_name='user',
+                    new_name='LOGIN',
+                ),
+            ]
         ),
     ]
